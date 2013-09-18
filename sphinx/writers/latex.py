@@ -167,6 +167,9 @@ class LaTeXTranslator(nodes.NodeVisitor):
         'transition':      '\n\n\\bigskip\\hrule{}\\bigskip\n\n',
     }
 
+    # sphinx specific document classes
+    docclasses = ('howto', 'manual')
+
     def __init__(self, document, builder):
         nodes.NodeVisitor.__init__(self, document)
         self.builder = builder
@@ -179,7 +182,7 @@ class LaTeXTranslator(nodes.NodeVisitor):
 
         self.elements = self.default_elements.copy()
         self.elements.update({
-            'wrapperclass': document.settings.docclass,
+            'wrapperclass': self.format_docclass(document.settings.docclass),
             'papersize':    papersize,
             'pointsize':    builder.config.latex_font_size,
             # if empty, the title is set to the first section title
@@ -275,6 +278,12 @@ class LaTeXTranslator(nodes.NodeVisitor):
         self.previous_spanning_row = 0
         self.previous_spanning_column = 0
         self.remember_multirow = {}
+
+    def format_docclass(self, docclass):
+        return '{prefix}{docclass}'.format(
+                prefix='sphinx' if docclass in self.docclasses else '',
+                docclass=docclass
+        )
 
     def astext(self):
         return (HEADER % self.elements +
