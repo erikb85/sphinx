@@ -950,6 +950,8 @@ class LaTeXTranslator(nodes.NodeVisitor):
             w = self.latex_image_length(attrs['width'])
             if w:
                 include_graphics_options.append('width=%s' % w)
+        else:
+            include_graphics_options.append('width=\\textwidth')
         if 'height' in attrs:
             h = self.latex_image_length(attrs['height'])
             if h:
